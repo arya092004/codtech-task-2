@@ -1,0 +1,84 @@
+// Define pins for sensors and actuators
+const int smokeDetectorPin = A0; // Analog pin for smoke detector
+const int pirSensorPin = 2; // Digital pin for PIR sensor
+const int ultrasonicTrigPin = 3; // Digital pin for ultrasonic sensor trigger
+const int ultrasonicEchoPin = 4; // Digital pin for ultrasonic sensor echo
+const int ldrPin = A1; // Analog pin for LDR sensor
+
+const int alarmPin = 8; // Digital pin for alarm
+const int doorMotorPin = 9; // Digital pin for door motor
+const int fanPin = 10; // Digital pin for fan
+const int lightPin = 11; // Digital pin for light
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+
+  // Set pin modes
+  pinMode(smokeDetectorPin, INPUT);
+  pinMode(pirSensorPin, INPUT);
+  pinMode(ultrasonicTrigPin, OUTPUT);
+  pinMode(ultrasonicEchoPin, INPUT);
+  pinMode(ldrPin, INPUT);
+
+  pinMode(alarmPin, OUTPUT);
+  pinMode(doorMotorPin, OUTPUT);
+  pinMode(fanPin, OUTPUT);
+  pinMode(lightPin, OUTPUT);
+
+  // Initially turn off all actuators
+  digitalWrite(alarmPin, LOW);
+  digitalWrite(doorMotorPin, LOW);
+  digitalWrite(fanPin, LOW);
+  digitalWrite(lightPin, LOW);
+}
+
+void loop() {
+  // Read smoke detector value
+  int smokeValue = analogRead(smokeDetectorPin);
+  // If smoke is detected, activate alarm
+  if (smokeValue > 300) {
+    digitalWrite(alarmPin, HIGH);
+  } else {
+    digitalWrite(alarmPin, LOW);
+  }
+
+  // Read PIR sensor value
+  int pirValue = digitalRead(pirSensorPin);
+  // If motion is detected, turn on fan
+  if (pirValue == HIGH) {
+    digitalWrite(fanPin, HIGH);
+  } else {
+    digitalWrite(fanPin, LOW);
+  }
+
+  // Read ultrasonic sensor value
+  long duration, distance;
+  digitalWrite(ultrasonicTrigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(ultrasonicTrigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(ultrasonicTrigPin, LOW);
+  duration = pulseIn(ultrasonicEchoPin, HIGH);
+  distance = (duration / 2) / 29.1; // Calculate distance in cm
+
+  // If someone is in front of the door (within 50 cm), open the door
+  if (distance < 50) {
+    digitalWrite(doorMotorPin, HIGH);
+  } else {
+    digitalWrite(doorMotorPin, LOW);
+  }
+
+  // Read LDR value
+  int ldrValue = analogRead(ldrPin);
+  // If it's dark and someone is home, turn on light
+  // Assume "home" is detected by PIR sensor
+  if (ldrValue < 300 && pirValue == HIGH) {
+    digitalWrite(lightPin, HIGH);
+  } else {
+    digitalWrite(lightPin, LOW);
+  }
+
+  // Small delay before next loop iteration
+  delay(100);
+}
