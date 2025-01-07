@@ -1,1 +1,1 @@
-# codtech-task-2
+# codtech-task-2 home automation system
