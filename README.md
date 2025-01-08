@@ -10,4 +10,6 @@ BATCH DURATION - DEC 31ST,2024 TO JAN 31st,2025
 
 MENTOR NAME - NEELA SANTOSH
 
-CIRCUIT DESGIN - 
+CIRCUIT DESGIN - https://github.com/arya092004/codtech-task-2/blob/main/home%20automation%20with%20bluetooth%20circuit%20desgin.jpeg
+
+CODE - 
